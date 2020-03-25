@@ -1,13 +1,48 @@
-#buttons {
+#container {
+    background-color: thistle;
+    height: 98vh;
+    width: 98vw;
+    border: 1px solid black;
     display: grid;
-    grid-template-columns: 25vw;
-    grid-template-rows: 16vh 16vh 16vh 16vh 16vh;
-    grid-template-areas: 
-        "clear backspace divide multiply"
-        "seven eight nine subtract"
-        "four five six add"
-        "one two three add"
-        "zero decimal evaluate evaluate";
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-areas: "display display display display" "clear backspace divide multiply" "seven eight nine subtract" "four five six add" "one two three add" "zero decimal evaluate evaluate";
+}
+
+#display {
+    grid-area: display;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+}
+
+#display #recorded-input {
+    display: flex;
+    align-items: center;
+    height: 20%;
+    width: 100%;
+}
+
+#display #current-input {
+    display: flex;
+    align-items: center;
+    height: 80%;
+    width: 100%;
+}
+
+#display #recorded-input span {
+    width: 99%;
+    font-size: 2vh;
+}
+
+#display #current-input span {
+    width: 99%;
+    font-size: 10vh;
+}
+
+button {
+    border: 1px solid white;
 }
 
 #clear {
@@ -36,8 +71,8 @@
 
 #nine {
     grid-area: nine;
-
 }
+
 #subtract {
     grid-area: subtract;
 }
