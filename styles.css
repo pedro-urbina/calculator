@@ -1,0 +1,83 @@
+#buttons {
+    display: grid;
+    grid-template-columns: 25vw;
+    grid-template-rows: 16vh 16vh 16vh 16vh 16vh;
+    grid-template-areas: 
+        "clear backspace divide multiply"
+        "seven eight nine subtract"
+        "four five six add"
+        "one two three add"
+        "zero decimal evaluate evaluate";
+}
+
+#clear {
+    grid-area: clear;
+}
+
+#backspace {
+    grid-area: backspace;
+}
+
+#divide {
+    grid-area: divide;
+}
+
+#multiply {
+    grid-area: multiply;
+}
+
+#seven {
+    grid-area: seven;
+}
+
+#eight {
+    grid-area: eight;
+}
+
+#nine {
+    grid-area: nine;
+
+}
+#subtract {
+    grid-area: subtract;
+}
+
+#four {
+    grid-area: four;
+}
+
+#five {
+    grid-area: five;
+}
+
+#six {
+    grid-area: six;
+}
+
+#one {
+    grid-area: one;
+}
+
+#two {
+    grid-area: two;
+}
+
+#three {
+    grid-area: three;
+}
+
+#add {
+    grid-area: add;
+}
+
+#zero {
+    grid-area: zero;
+}
+
+#decimal {
+    grid-area: decimal;
+}
+
+#evaluate {
+    grid-area: evaluate;
+}
