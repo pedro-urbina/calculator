@@ -43,13 +43,14 @@
 
 button {
     border: 1px solid white;
+    font-size: 6vh;
 }
 
 #clear {
     grid-area: clear;
 }
 
-#backspace {
+#back {
     grid-area: backspace;
 }
 
