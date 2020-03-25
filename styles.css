@@ -17,26 +17,26 @@
     text-align: right;
 }
 
-#display #recorded-input {
+#display #sub-display {
     display: flex;
     align-items: center;
     height: 20%;
     width: 100%;
 }
 
-#display #current-input {
+#display #main-display {
     display: flex;
     align-items: center;
     height: 80%;
     width: 100%;
 }
 
-#display #recorded-input span {
+#display #sub-display span {
     width: 99%;
     font-size: 2vh;
 }
 
-#display #current-input span {
+#display #main-display span {
     width: 99%;
     font-size: 10vh;
 }
@@ -54,66 +54,66 @@ button {
     grid-area: backspace;
 }
 
-#divide {
+.divide {
     grid-area: divide;
 }
 
-#multiply {
+.multiply {
     grid-area: multiply;
 }
 
-#seven {
+.seven {
     grid-area: seven;
 }
 
-#eight {
+.eight {
     grid-area: eight;
 }
 
-#nine {
+.nine {
     grid-area: nine;
 }
 
-#subtract {
+.subtract {
     grid-area: subtract;
 }
 
-#four {
+.four {
     grid-area: four;
 }
 
-#five {
+.five {
     grid-area: five;
 }
 
-#six {
+.six {
     grid-area: six;
 }
 
-#one {
+.one {
     grid-area: one;
 }
 
-#two {
+.two {
     grid-area: two;
 }
 
-#three {
+.three {
     grid-area: three;
 }
 
-#add {
+.add {
     grid-area: add;
 }
 
-#zero {
+.zero {
     grid-area: zero;
 }
 
-#decimal {
+.decimal {
     grid-area: decimal;
 }
 
-#evaluate {
+.evaluate {
     grid-area: evaluate;
 }

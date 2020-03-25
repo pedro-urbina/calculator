@@ -31,3 +31,40 @@ function operate(operator, num1, num2) {
             break;
     }
 }
+
+// Button Event Listeners
+const buttons = document.querySelectorAll("button");
+buttons.forEach(button => button.addEventListener('click', function (e) {
+    display(e.target.id);
+}));
+
+function eventHandler() {
+
+}
+
+function display(input) {
+    const mainDisplay = document.querySelector("#main-display-text");
+    const subDisplay = document.querySelector("#sub-display-text");
+
+    switch (input) {
+        case "clear":
+            mainDisplay.textContent = "";
+            subDisplay.textContent = "";
+            break;
+        case "back":
+            break;
+        case "/":
+        case "*":
+        case "-":
+        case "+":
+            subDisplay.textContent += `${mainDisplay.textContent} ${input} `;
+            mainDisplay.textContent = "";
+            break;
+        case "=":
+            subDisplay.textContent += `${mainDisplay.textContent} ${input} `;
+            mainDisplay.textContent = "result";
+            break;
+        default:
+            mainDisplay.textContent += input;
+    }
+}
