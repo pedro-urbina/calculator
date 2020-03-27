@@ -16,11 +16,14 @@ function eventHandler(input) {
         case "clear":
             equation = [];
             operand = "0";
-            mainDisplay.textContent = "0";
-            subDisplay.textContent = "";
+            wasEqualsPressed = false;
             break;
 
         case "back":
+            operand = operand.substring(0, operand.length - 1);
+            if (operand === "") {
+                operand = "0";
+            }
             break;
 
         case "/":
@@ -29,29 +32,26 @@ function eventHandler(input) {
         case "+":
             if (operand !== "") {
                 equation.push(operand);
-            }
+            } 
             operand = "";
 
-            // if last input was an operator, replace it
+            // if last element is another operator, replace it
             if ("+-*/".includes(equation[equation.length - 1])) {
                 equation.pop();
             }
-
             equation.push(input);
 
-            subDisplay.textContent = equation.join("");
-            mainDisplay.textContent = "";
             wasEqualsPressed = false;
             break;
 
         case "=":
-            if (operand !== "") { 
+            if (operand !== "") {
                 equation.push(operand);
             }
             operand = "";
 
-            // remove any unused operator from end of array
-            if ("+-*/".includes(equation[equation.length - 1])) {
+            // remove any unused operator or decimal from end of array
+            while ("+-*/.".includes(equation[equation.length - 1])) {
                 equation.pop();
             }
 
@@ -61,7 +61,24 @@ function eventHandler(input) {
             wasEqualsPressed = true;
             break;
 
-        default: //number or decimal input
+        case ".":
+            if (operand.includes(".")) break;
+
+            if (wasEqualsPressed) { //start fresh
+                equation = [];
+                subDisplay.textContent = "";
+                wasEqualsPressed = false;
+            }
+
+            if (operand === "") {
+                operand = "0";
+            }
+
+            operand += input;
+
+            break;
+
+        default: //number inputs
             if (wasEqualsPressed) { //start fresh
                 equation = [];
                 subDisplay.textContent = "";
@@ -73,7 +90,12 @@ function eventHandler(input) {
             }
 
             operand += input;
-            mainDisplay.textContent = operand;
+    }
+
+    // updates display except after pressing equals
+    if (!wasEqualsPressed) {
+        mainDisplay.textContent = operand;
+        subDisplay.textContent = equation.join("");
     }
 }
 
