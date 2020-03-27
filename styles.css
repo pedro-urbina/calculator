@@ -2,11 +2,18 @@
     background-color: thistle;
     height: 98vh;
     width: 98vw;
+    margin: auto;
     border: 1px solid black;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
     grid-template-areas: "display display display display" "clear backspace divide multiply" "seven eight nine subtract" "four five six add" "one two three add" "zero decimal evaluate evaluate";
+}
+
+@media (min-width: 1000px) {
+    #container {
+        width: 50vw;
+    }
 }
 
 #display {
