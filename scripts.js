@@ -1,4 +1,9 @@
-let buffer = [];
+let equation = [];
+let operand = "0";
+let wasEqualsPressed = false;
+const mainDisplay = document.querySelector("#main-display-text");
+const subDisplay = document.querySelector("#sub-display-text");
+mainDisplay.textContent = operand;
 
 // Button Event Listeners
 const buttons = document.querySelectorAll("button");
@@ -6,46 +11,82 @@ buttons.forEach(button => button.addEventListener('click', function (e) {
     eventHandler(e.target.id);
 }));
 
-function add(num1, num2) {
-    return parseFloat(num1) + parseFloat(num2);
-}
+function eventHandler(input) {
+    switch (input) {
+        case "clear":
+            equation = [];
+            operand = "0";
+            mainDisplay.textContent = "0";
+            subDisplay.textContent = "";
+            break;
 
-function subtract(num1, num2) {
-    return parseFloat(num1) - parseFloat(num2);
-}
+        case "back":
+            break;
 
-function multiply(num1, num2) {
-    return parseFloat(num1) * parseFloat(num2);
-}
-
-function divide(num1, num2) {
-    return parseFloat(num1) / parseFloat(num2);
-}
-
-function operate(operator, num1, num2) {
-    switch (operator) {
-        case "+":
-            return add(num1, num2);
-        case "-":
-            return subtract(num1, num2);
-        case "*":
-            return multiply(num1, num2);
         case "/":
-            if (num2 === 0) return "ERROR: Dividing by zero is simply not possible";
-            return divide(num1, num2);
+        case "*":
+        case "-":
+        case "+":
+            if (operand !== "") {
+                equation.push(operand);
+            }
+            operand = "";
+
+            // if last input was an operator, replace it
+            if ("+-*/".includes(equation[equation.length - 1])) {
+                equation.pop();
+            }
+
+            equation.push(input);
+
+            subDisplay.textContent = equation.join("");
+            mainDisplay.textContent = "";
+            wasEqualsPressed = false;
+            break;
+
+        case "=":
+            if (operand !== "") { 
+                equation.push(operand);
+            }
+            operand = "";
+
+            // remove any unused operator from end of array
+            if ("+-*/".includes(equation[equation.length - 1])) {
+                equation.pop();
+            }
+
+            subDisplay.textContent = equation.join("") + "=";
+            mainDisplay.textContent = evaluate();
+
+            wasEqualsPressed = true;
+            break;
+
+        default: //number or decimal input
+            if (wasEqualsPressed) { //start fresh
+                equation = [];
+                subDisplay.textContent = "";
+                wasEqualsPressed = false;
+            }
+
+            if (operand === "0") { //ignore leading zeroes
+                operand = "";
+            }
+
+            operand += input;
+            mainDisplay.textContent = operand;
     }
 }
 
 function evaluate() {
-    while (buffer.length > 1) {
-        console.log(buffer);
-        let mulIndex = buffer.findIndex(element => element === "*");
-        let divIndex = buffer.findIndex(element => element === "/");
-        let addIndex = buffer.findIndex(element => element === "+");
-        let subIndex = buffer.findIndex(element => element === "-");
+    while (equation.length > 1) {
+        // locate operators in equation
+        let mulIndex = equation.findIndex(element => element === "*");
+        let divIndex = equation.findIndex(element => element === "/");
+        let addIndex = equation.findIndex(element => element === "+");
+        let subIndex = equation.findIndex(element => element === "-");
         let operatorIndex = 0;
-        console.log(addIndex);
 
+        // determine order of operation
         if (mulIndex !== -1 && divIndex !== -1) {
             if (mulIndex < divIndex) {
                 operatorIndex = mulIndex;
@@ -69,68 +110,44 @@ function evaluate() {
             operatorIndex = subIndex;
         }
 
-        //console.log(operatorIndex);
-
-        let operator = buffer[operatorIndex];
-        let num1 = buffer[operatorIndex - 1];
-        let num2 = buffer[operatorIndex + 1];
-
-        //console.log(operator);
-        //console.log(num1);
-        //console.log(num2);
+        //simplify 2 numbers at a time
+        let operator = equation[operatorIndex];
+        let num1 = equation[operatorIndex - 1];
+        let num2 = equation[operatorIndex + 1];
 
         let result = operate(operator, num1, num2);
         let resultIndex = operatorIndex - 1;
 
-        //console.log(result);
-        //console.log(buffer);
-        buffer.splice(resultIndex, 3, result);
-        //console.log(buffer);
+        equation.splice(resultIndex, 3, result);
     }
-    //console.log(buffer[0]);
-    return buffer[0];
+    return equation[0];
 }
 
-let operand = "";
-function eventHandler(input) {
-    const mainDisplay = document.querySelector("#main-display-text");
-    const subDisplay = document.querySelector("#sub-display-text");
-
-    switch (input) {
-        case "clear":
-            buffer = [];
-            mainDisplay.textContent = "";
-            subDisplay.textContent = "";
-            break;
-        case "back":
-            break;
-        case "/":
-        case "*":
-        case "-":
+function operate(operator, num1, num2) {
+    switch (operator) {
         case "+":
-            buffer.push(operand);
-            operand = "";
-            buffer.push(input);
-            //console.log(buffer);
-            subDisplay.textContent = buffer.join("");
-            //subDisplay.textContent += `${mainDisplay.textContent} ${input} `;
-            mainDisplay.textContent = "";
-            break;
-        case "=":
-            // remove any unused operator from end of array
-            if ("+-*/".includes(buffer[buffer.length - 1])) {
-                buffer.pop();
-                subDisplay.textContent = buffer.join("");
-            }
-            //console.log(buffer);
-            buffer.push(operand);
-            operand = "";
-            subDisplay.textContent += `${mainDisplay.textContent} ${input} `;
-            mainDisplay.textContent = evaluate();
-            break;
-        default:
-            operand += input;
-            //console.log(buffer);
-            mainDisplay.textContent = operand;
+            return add(num1, num2);
+        case "-":
+            return subtract(num1, num2);
+        case "*":
+            return multiply(num1, num2);
+        case "/":
+            return divide(num1, num2);
     }
+}
+
+function add(num1, num2) {
+    return parseFloat(num1) + parseFloat(num2);
+}
+
+function subtract(num1, num2) {
+    return parseFloat(num1) - parseFloat(num2);
+}
+
+function multiply(num1, num2) {
+    return parseFloat(num1) * parseFloat(num2);
+}
+
+function divide(num1, num2) {
+    return parseFloat(num1) / parseFloat(num2);
 }
