@@ -63,6 +63,7 @@ function eventHandler(input) {
 
         case ".":
             if (operand.includes(".")) break;
+            if (operand.length > 17) break;
 
             if (wasEqualsPressed) { //start fresh
                 equation = [];
@@ -79,6 +80,8 @@ function eventHandler(input) {
             break;
 
         default: //number inputs
+            if (operand.length > 17) break;
+
             if (wasEqualsPressed) { //start fresh
                 equation = [];
                 subDisplay.textContent = "";
@@ -96,6 +99,12 @@ function eventHandler(input) {
     if (!wasEqualsPressed) {
         mainDisplay.textContent = operand;
         subDisplay.textContent = equation.join("");
+
+        if (equation.join("").length > 90) {
+            subDisplay.style.fontSize = "1vh";
+        } else {
+            subDisplay.style.fontSize = "2vh";
+        }
     }
 }
 
