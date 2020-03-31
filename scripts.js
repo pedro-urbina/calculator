@@ -1,25 +1,53 @@
 let equation = [];
 let operand = "0";
 let wasEqualsPressed = false;
+let divideError = false;
+const inputDigitsLimit = 14;
 const mainDisplay = document.querySelector("#main-display-text");
 const subDisplay = document.querySelector("#sub-display-text");
 mainDisplay.textContent = operand;
 
-// Button Event Listeners
+// Click Event Listeners
 const buttons = document.querySelectorAll("button");
 buttons.forEach(button => button.addEventListener('click', function (e) {
     eventHandler(e.target.id);
 }));
 
+// Keyboard Event Listeners
+window.addEventListener('keydown', pulseButton);
+buttons.forEach(button => button.addEventListener('transitionend', removePulse));
+
+function pulseButton(e) {
+    event.preventDefault();
+    const button = e.key === "=" ? document.querySelector('#Enter')
+        : e.key === "Delete" ? document.querySelector('#Escape')
+        : document.querySelector(`button[id="${e.key}"]`);        
+
+    if (operand.length <= inputDigitsLimit) {
+        button.classList.add('pulse');
+    }
+    eventHandler(e.key);
+}
+
+function removePulse(e) {
+    if (e.propertyName !== 'transform') return;
+    e.target.classList.remove('pulse');
+}
+
 function eventHandler(input) {
+    console.log("input = " + input);
     switch (input) {
-        case "clear":
+        //case "clear":
+        case "Delete":
+        case "Escape":
             equation = [];
             operand = "0";
             wasEqualsPressed = false;
+            divideError = false;
+            console.log("cleared");
             break;
 
-        case "back":
+        case "Backspace":
             operand = operand.substring(0, operand.length - 1);
             if (operand === "") {
                 operand = "0";
@@ -30,6 +58,8 @@ function eventHandler(input) {
         case "*":
         case "-":
         case "+":
+            if (divideError) return;
+
             if (operand !== "") {
                 equation.push(operand);
             } 
@@ -45,6 +75,10 @@ function eventHandler(input) {
             break;
 
         case "=":
+        case "Enter":
+            console.log("= was selected")
+            if (divideError) return;
+
             if (operand !== "") {
                 equation.push(operand);
             }
@@ -63,7 +97,7 @@ function eventHandler(input) {
 
         case ".":
             if (operand.includes(".")) break;
-            if (operand.length > 17) break;
+            if (operand.length > inputDigitsLimit) break;
 
             if (wasEqualsPressed) { //start fresh
                 equation = [];
@@ -80,7 +114,8 @@ function eventHandler(input) {
             break;
 
         default: //number inputs
-            if (operand.length > 17) break;
+            if (divideError) return;
+            if (operand.length > inputDigitsLimit) return;
 
             if (wasEqualsPressed) { //start fresh
                 equation = [];
@@ -100,10 +135,13 @@ function eventHandler(input) {
         mainDisplay.textContent = operand;
         subDisplay.textContent = equation.join("");
 
-        if (equation.join("").length > 90) {
+        let equationLength = equation.join("").length;
+        if (equationLength > 90) {
             subDisplay.style.fontSize = "1vh";
-        } else {
+        } else if (equationLength > 45) {
             subDisplay.style.fontSize = "2vh";
+        } else {
+            subDisplay.style.fontSize = "3vh";
         }
     }
 }
@@ -147,6 +185,12 @@ function evaluate() {
         let num2 = equation[operatorIndex + 1];
 
         let result = operate(operator, num1, num2);
+        if (result === "ERROR: Division by 0") {
+            equation = [];
+            divideError = true;
+            console.log("oops");
+            return result;
+        }
         let resultIndex = operatorIndex - 1;
 
         equation.splice(resultIndex, 3, result);
@@ -163,6 +207,9 @@ function operate(operator, num1, num2) {
         case "*":
             return multiply(num1, num2);
         case "/":
+            if (num2 === "0") {
+                return "ERROR: Division by 0";
+            }
             return divide(num1, num2);
     }
 }
